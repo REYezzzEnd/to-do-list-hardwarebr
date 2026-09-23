@@ -1,13 +1,13 @@
 # To-Do List Project
 
-Uma aplicação moderna e responsiva de **Lista de Tarefas** desenvolvida para fins de aprendizado, utilizando **React** e estilizada com o inovador **Tailwind CSS v4**. O projeto gerencia formulários de forma eficiente através da API nativa `FormData` e armazena os dados de forma persistente no navegador.
+Uma aplicação moderna e responsiva de **Lista de Tarefas** desenvolvida para fins de aprendizado, utilizando **React** e estilizada com o  **Tailwind CSS v4**. O projeto gerencia formulários de forma eficiente através da API nativa `FormData` e armazena os dados de forma persistente no navegador.
 
 ---
 
 ## Funcionalidades
 
 * ➕ **Adicionar Tarefas:** Criação de itens contendo descrição e nível de prioridade.
-* 🔢 **Campos Múltiplos:** Formulário inteligente que captura múltiplos inputs simultaneamente.
+* 🔢 **Campos Múltiplos:** Formulário que captura múltiplos inputs simultaneamente.
 * 🚨 **Nível de Prioridade:** Adiciona contexto de urgência para cada atividade listada.
 * ❌ **Remover Tarefas:** Exclusão individual de itens atualizando a interface instantaneamente.
 * 💾 **Persistência de Dados:** Integração com o `localStorage` para manter as tarefas gravadas mesmo após atualizar a página.
@@ -15,7 +15,7 @@ Uma aplicação moderna e responsiva de **Lista de Tarefas** desenvolvida para f
 
 ---
 
-##Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 O projeto foi construído utilizando o ecossistema mais moderno de desenvolvimento web:
 
@@ -55,7 +55,7 @@ Abra o seu navegador e acesse o endereço gerado no terminal, geralmente:
 
 ---
 
-## 💡 Conceitos de React Aprendidos
+## Conceitos de React Aprendidos
 
 Este projeto serviu como base fundamental para compreender e dominar os seguintes tópicos:
 1. **Gerenciamento de Estado (`useState`)**: Como inicializar estados dinamicamente consumindo dados pré-existentes do navegador.
