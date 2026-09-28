@@ -9,6 +9,7 @@ import {
   salvarTarefas,
   removerTarefa
 } from '../assets/functions/tarefas';
+import { FormularioTarefas } from './components/FormularioTarefas';
 
 function App() {
   const [tarefas, setTarefas] = useState(() => {
@@ -48,90 +49,7 @@ function App() {
       
       <div className="bg-white p-4 rounded shadow-md w-full max-w-md border border-gray-300">
         <h2 className="text-lg font-bold mb-2 text-gray-800 text-center underline">Adicionar Tarefa</h2>
-
-        <form
-          className="p-2 rounded flex flex-col gap-3"
-          onSubmit={(e) => {
-            e.preventDefault();
-            const dadosFormulario = new FormData(e.currentTarget);
-            const conteudoTexto = dadosFormulario.get('tarefa')?.toString().trim();
-
-            if (!conteudoTexto) return;
-
-            const novaTarefa = {
-              id: Date.now(),
-              titulo: conteudoTexto,
-              prioridade: dadosFormulario.get('prioridade') || '0',
-              descricao: dadosFormulario.get('descricao') || '',
-              dia: dadosFormulario.get('dia')?.toString().trim() || '',
-              dataLimite: null,
-              concluido: false,
-            };
-
-            const novasTarefas = [...tarefas, novaTarefa].sort((a, b) => Number(a.prioridade) - Number(b.prioridade));
-            salvarTarefas(novasTarefas, setTarefas);
-            e.currentTarget.reset();
-          }}
-        >
-          <div>
-            <label htmlFor="tarefa" className="block text-md font-medium text-gray-700 mb-1 text-center">
-              Tarefa
-            </label>
-            <input
-              type="text"
-              name="tarefa"
-              id="tarefa"
-              placeholder="Digite a sua tarefa"
-              className="border border-gray-300 p-2 rounded w-full bg-white text-black focus:outline-blue-500"
-              required
-            />
-          </div>
-
-          <div>
-            <label htmlFor="descricao" className="block text-md font-medium text-gray-700 mb-1 text-center">
-              Descrição
-            </label>
-            <textarea
-              name="descricao"
-              id="descricao"
-              placeholder="Digite a descrição da tarefa"
-              className="border border-gray-300 p-2 rounded w-full bg-white text-black focus:outline-blue-500"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="prioridade-tarefa" className="block text-md font-medium text-gray-700 mb-1 text-center">
-              Prioridade
-            </label>
-            <input
-              type="number"
-              name="prioridade"
-              id="prioridade-tarefa"
-              placeholder="Digite a prioridade da tarefa"
-              className="border border-gray-300 p-2 rounded w-full bg-white text-black focus:outline-blue-500"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="dia" className="block text-md font-medium text-gray-700 mb-1 text-center">
-              Dia da Tarefa
-            </label>
-            <input
-              type="date"
-              name="dia"
-              id="dia"
-              className="border border-gray-300 p-2 rounded w-full bg-white text-black focus:outline-blue-500"
-              required
-            />
-          </div>
-
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer font-bold mt-2 transition-colors"
-          >
-            Adicionar
-          </button>
-        </form>
+        <FormularioTarefas tarefas={tarefas} setTarefas={setTarefas}/>
       </div>
 
       <div className="bg-white p-4 shadow-md rounded w-full max-w-md border border-gray-200 flex flex-row justify-between gap-2 text-center">
@@ -198,7 +116,7 @@ function App() {
 
             <button
               type="button"
-              className="bg-red-500 text-white p-2 rounded hover:bg-red-600 cursor-pointer font-bold transition-colors w-1/2 text-sm"
+              className="bg-red-500 text-white p-2 rounded hover:bg-red-800 cursor-pointer font-bold transition-colors w-1/2 text-sm"
               onClick={() => {
                 if (confirm('Tem certeza que deseja apagar todas as tarefas?')) {
                   salvarTarefas([], setTarefas);
@@ -220,12 +138,14 @@ function App() {
                 key={tarefa.id}
                 className="flex items-center w-full justify-between border-b hover:bg-gray-50 transition-colors p-2 rounded"
               >
-                <div className="flex flex-row gap-3 items-center">
+                <div className="flex flex-row gap-5 items-center">
                   <span className="text-md text-yellow-500 font-bold">#{tarefa.prioridade}</span>
                   <span className={`font-medium text-md ${tarefa.concluido ? 'line-through text-gray-400' : 'text-gray-800'}`}>
                     {tarefa.titulo}
                   </span>
+                  
                   <ClassificacaoTarefa tarefa={tarefa} />
+                  <span className="text-sm text-black font-bold">Data: {tarefa.dia} </span>
                 </div>
 
                 <div className="flex items-center gap-1">
@@ -237,7 +157,7 @@ function App() {
                   </BotaoTarefas>
 
                   <BotaoTarefas
-                    className="bg-red-500 text-white hover:bg-red-600"
+                    className="bg-red-500 text-white hover:bg-red-800"
                     onClick={() => removerTarefa(tarefa.id, tarefas, setTarefas)}
                   >
                     <Trash2 size={16} />
