@@ -10,6 +10,7 @@ import {
   removerTarefa
 } from '../assets/functions/tarefas';
 import { FormularioTarefas } from './components/FormularioTarefas';
+import { ModalTarefa } from './components/ModalTarefa';
 
 function App() {
   const [tarefas, setTarefas] = useState(() => {
@@ -20,6 +21,7 @@ function App() {
   const [filtroDia, setFiltroDia] = useState('');
   const [filtroConcluido, setFiltroConcluido] = useState('');
   const [filtroPrioridade, setFiltroPrioridade] = useState('');
+  cont [isOpen,onClose] = useState(false);
 
   const alternarConcluido = (id) => {
     const atualizadas = tarefas.map((t) =>
@@ -46,10 +48,10 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 p-4 bg-gray-50 min-h-screen">
-      
+
       <div className="bg-white p-4 rounded shadow-md w-full max-w-md border border-gray-300">
         <h2 className="text-lg font-bold mb-2 text-gray-800 text-center underline">Adicionar Tarefa</h2>
-        <FormularioTarefas tarefas={tarefas} setTarefas={setTarefas}/>
+        <FormularioTarefas tarefas={tarefas} setTarefas={setTarefas} />
       </div>
 
       <div className="bg-white p-4 shadow-md rounded w-full max-w-md border border-gray-200 flex flex-row justify-between gap-2 text-center">
@@ -61,7 +63,7 @@ function App() {
 
       <div className="bg-white p-4 rounded shadow-md w-full max-w-md border border-gray-200">
         <div className="flex flex-col gap-3 mb-4">
-          
+
           <div>
             <label htmlFor="filtro-dia" className="block text-sm font-medium text-gray-700 mb-1">
               Filtrar por Dia
@@ -126,12 +128,14 @@ function App() {
             >
               Excluir Todas
             </button>
+
+      
           </div>
         </div>
 
         <div>
           <h2 className="text-lg font-bold mb-4 text-center underline">Lista de Tarefas</h2>
-          
+
           <ul className="space-y-2 flex flex-col w-full">
             {tarefasExibidas.map((tarefa) => (
               <li
@@ -143,12 +147,13 @@ function App() {
                   <span className={`font-medium text-md ${tarefa.concluido ? 'line-through text-gray-400' : 'text-gray-800'}`}>
                     {tarefa.titulo}
                   </span>
-                  
+
                   <ClassificacaoTarefa tarefa={tarefa} />
                   <span className="text-sm text-black font-bold">Data: {tarefa.dia} </span>
                 </div>
 
                 <div className="flex items-center gap-1">
+
                   <BotaoTarefas
                     className={tarefa.concluido ? "bg-amber-500 hover:bg-amber-600 text-white" : "bg-green-500 hover:bg-green-600 text-white"}
                     onClick={() => alternarConcluido(tarefa.id)}
