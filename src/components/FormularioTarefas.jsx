@@ -5,9 +5,9 @@ import { LabelFormulario } from "./LabelFormulario";
 export function FormularioTarefas({ tarefas, setTarefas }) {
     return (
         <form
-            className="p-2 rounded flex flex-col gap-3"
+           className="p-2 rounded flex flex-col gap-3"
             onSubmit={(e) => {
-                e.preventDefault();
+                e.preventDefault(); 
                 const dadosFormulario = new FormData(e.currentTarget);
                 const conteudoTexto = dadosFormulario.get('tarefa')?.toString().trim();
 
@@ -36,6 +36,7 @@ export function FormularioTarefas({ tarefas, setTarefas }) {
                  id="tarefa" 
                  placeholder="Digite a sua tarefa"
                  required={true}/>
+                 value={tarefas.titulo}
             </div>
 
             <div>
@@ -45,17 +46,18 @@ export function FormularioTarefas({ tarefas, setTarefas }) {
                     id="descricao"
                     placeholder="Digite a descrição da tarefa"
                     className="border border-gray-300 p-2 rounded w-full bg-white text-black focus:outline-blue-500"
+                    value={tarefas.descricao}
                 />
             </div>
 
             <div>
                 <LabelFormulario htmlFor="prioridade-tarefa" titulo="Prioridade"/>
-                <InputFormulario type="number" name="prioridade" id="prioridade-tarefa" placeholder="Digite a prioridade da tarefa" />
+                <InputFormulario type="number" name="prioridade" id="prioridade-tarefa" placeholder="Digite a prioridade da tarefa" value={tarefas.prioridade} />
             </div>
 
             <div>
                 <LabelFormulario htmlFor="dia" titulo="Dia da tarefa"/>
-                <InputFormulario type="date" name="dia" id="dia" required={true} />
+                <InputFormulario type="date" name="dia" id="dia" required={true}  value={tarefas.dia}/>
             </div>
 
             <button

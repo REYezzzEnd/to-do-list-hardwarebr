@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Trash2, Check, Undo } from 'lucide-react';
+import { Trash2, Check, Undo, ExternalLink } from 'lucide-react';
 import { BotaoTarefas } from './components/BotaoTarefas';
 import { ClassificacaoTarefa } from './components/ClassificacaoTarefa';
 import { TarefasStatus } from './components/TarefasStatus';
@@ -21,7 +21,7 @@ function App() {
   const [filtroDia, setFiltroDia] = useState('');
   const [filtroConcluido, setFiltroConcluido] = useState('');
   const [filtroPrioridade, setFiltroPrioridade] = useState('');
-  cont [isOpen,onClose] = useState(false);
+  const [isOpen, setIsClose] = useState(false);
 
   const alternarConcluido = (id) => {
     const atualizadas = tarefas.map((t) =>
@@ -47,7 +47,7 @@ function App() {
   });
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 p-4 bg-gray-50 min-h-screen">
+    <div className="flex flex-col items-center justify-center gap-5 p-10 bg-gray-50 min-h-screen">
 
       <div className="bg-white p-4 rounded shadow-md w-full max-w-md border border-gray-300">
         <h2 className="text-lg font-bold mb-2 text-gray-800 text-center underline">Adicionar Tarefa</h2>
@@ -129,7 +129,7 @@ function App() {
               Excluir Todas
             </button>
 
-      
+
           </div>
         </div>
 
@@ -147,22 +147,28 @@ function App() {
                   <span className={`font-medium text-md ${tarefa.concluido ? 'line-through text-gray-400' : 'text-gray-800'}`}>
                     {tarefa.titulo}
                   </span>
-
+                   {isOpen && <ModalTarefa tarefa={tarefa} tarefas={tarefas} isOpen={isOpen} setIsClose={() => setIsClose(false)}/>}
                   <ClassificacaoTarefa tarefa={tarefa} />
                   <span className="text-sm text-black font-bold">Data: {tarefa.dia} </span>
                 </div>
 
                 <div className="flex items-center gap-1">
+                  <BotaoTarefas
+                    className='bg-gray-300 hover:bg-gray-400 text-black'
+                    onClick={() => setIsClose(true)}>
+
+                    <ExternalLink size={16} />
+                  </BotaoTarefas>
 
                   <BotaoTarefas
-                    className={tarefa.concluido ? "bg-amber-500 hover:bg-amber-600 text-white" : "bg-green-500 hover:bg-green-600 text-white"}
+                    className={tarefa.concluido ? "bg-amber-500 hover:bg-amber-600 text-white " : "  bg-green-500 hover:bg-green-600 text-white"}
                     onClick={() => alternarConcluido(tarefa.id)}
                   >
                     {tarefa.concluido ? <Undo size={16} /> : <Check size={16} />}
                   </BotaoTarefas>
 
                   <BotaoTarefas
-                    className="bg-red-500 text-white hover:bg-red-800"
+                    className="bg-red-500 text-white hover:bg-red-800 "
                     onClick={() => removerTarefa(tarefa.id, tarefas, setTarefas)}
                   >
                     <Trash2 size={16} />
@@ -171,7 +177,7 @@ function App() {
               </li>
             ))}
           </ul>
-
+          
           {tarefasExibidas.length === 0 && (
             <p className="text-gray-400 text-sm text-center my-4">Nenhuma tarefa encontrada!</p>
           )}
