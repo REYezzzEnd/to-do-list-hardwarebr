@@ -215,8 +215,8 @@ function App() {
 
                   <span
                     className={`font-medium text-md ${tarefa.concluido
-                        ? 'line-through text-gray-400'
-                        : 'text-gray-800'
+                      ? 'line-through text-gray-400'
+                      : 'text-gray-800'
                       }`}
                   >
                     {tarefa.titulo}
@@ -288,9 +288,11 @@ function App() {
         <ModalTarefa
           tarefa={tarefaSelecionada}
           tarefas={tarefas}
+          setTarefas={setTarefas}
           isOpen={true}
           setIsClose={() => setTarefaSelecionada(null)}
         />
+
       )}
 
     </div>

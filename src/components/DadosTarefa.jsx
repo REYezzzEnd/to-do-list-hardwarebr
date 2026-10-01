@@ -1,69 +1,117 @@
-export function DadosTarefa({ tarefa }) {
-    return (
-        <div className="flex flex-col gap-3 text-left">
+import { useState } from "react";
+import { salvarTarefas } from "../../assets/functions/tarefas";
+import { InputFormulario } from "./InputFormulario";
+import { LabelFormulario } from "./LabelFormulario";
 
+export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
+    const [titulo, setTitulo] = useState(tarefa.titulo);
+    const [descricao, setDescricao] = useState(tarefa.descricao || "");
+    const [prioridade, setPrioridade] = useState(tarefa.prioridade || "0");
+    const [dia, setDia] = useState(tarefa.dia || "");
+
+    const salvarEdicao = (e) => {
+        e.preventDefault();
+
+        if (!titulo.trim()) return;
+
+        const tarefasAtualizadas = tarefas
+            .map((item) =>
+                item.id === tarefa.id
+                    ? {
+                        ...item,
+                        titulo: titulo.trim(),
+                        descricao,
+                        prioridade,
+                        dia,
+                    }
+                    : item
+            )
+            .sort(
+                (a, b) =>
+                    Number(a.prioridade) - Number(b.prioridade)
+            );
+
+        salvarTarefas(tarefasAtualizadas, setTarefas);
+    };
+
+    return (
+        <form
+            onSubmit={salvarEdicao}
+            className="flex flex-col gap-3 text-left"
+        >
             <h2 className="text-lg font-bold text-center text-gray-800 underline">
-                DADOS DA TAREFA
+                EDITAR TAREFA
             </h2>
 
             <div>
-                <span className="font-bold text-gray-700">
-                    Título:
-                </span>
+                <LabelFormulario
+                    htmlFor="editar-tarefa"
+                    titulo="Título"
+                />
 
-                <p className="text-gray-800">
-                    {tarefa.titulo}
-                </p>
+                <InputFormulario
+                    type="text"
+                    name="tarefa"
+                    id="editar-tarefa"
+                    value={titulo}
+                    onChange={(e) => setTitulo(e.target.value)}
+                    required={true}
+                />
             </div>
 
             <div>
-                <span className="font-bold text-gray-700">
-                    Descrição:
-                </span>
+                <LabelFormulario
+                    htmlFor="editar-descricao"
+                    titulo="Descrição"
+                />
 
-                <p className="text-gray-800">
-                    {tarefa.descricao || 'Nenhuma descrição informada.'}
-                </p>
+                <textarea
+                    name="descricao"
+                    id="editar-descricao"
+                    value={descricao}
+                    onChange={(e) => setDescricao(e.target.value)}
+                    placeholder="Digite a descrição da tarefa"
+                    className="border border-gray-300 p-2 rounded w-full bg-white text-black focus:outline-blue-500"
+                />
             </div>
 
             <div>
-                <span className="font-bold text-gray-700">
-                    Prioridade:
-                </span>
+                <LabelFormulario
+                    htmlFor="editar-prioridade"
+                    titulo="Prioridade"
+                />
 
-                <p className="text-gray-800">
-                    {tarefa.prioridade}
-                </p>
+                <InputFormulario
+                    type="number"
+                    name="prioridade"
+                    id="editar-prioridade"
+                    value={prioridade}
+                    onChange={(e) => setPrioridade(e.target.value)}
+                />
             </div>
 
             <div>
-                <span className="font-bold text-gray-700">
-                    Dia:
-                </span>
+                <LabelFormulario
+                    htmlFor="editar-dia"
+                    titulo="Dia da tarefa"
+                />
 
-                <p className="text-gray-800">
-                    {tarefa.dia || 'Nenhuma data informada.'}
-                </p>
+                <InputFormulario
+                    type="date"
+                    name="dia"
+                    id="editar-dia"
+                    value={dia}
+                    onChange={(e) => setDia(e.target.value)}
+                    required={true}
+                />
             </div>
 
-            <div>
-                <span className="font-bold text-gray-700">
-                    Status:
-                </span>
-
-                <p
-                    className={
-                        tarefa.concluido
-                            ? 'text-green-600 font-bold'
-                            : 'text-yellow-600 font-bold'
-                    }
-                >
-                    {tarefa.concluido
-                        ? 'Concluída'
-                        : 'Pendente'}
-                </p>
-            </div>
-
-        </div>
+            <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer font-bold transition-colors"
+            >
+                Salvar Alterações
+            </button>
+        </form>
     );
 }
