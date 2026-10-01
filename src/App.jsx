@@ -7,7 +7,8 @@ import {
   procurarNumeroTarefas,
   procurarNumeroTarefasAtrasadas,
   salvarTarefas,
-  removerTarefa
+  removerTarefa,
+  exibirTarefas
 } from '../assets/functions/tarefas';
 import { FormularioTarefas } from './components/FormularioTarefas';
 import { ModalTarefa } from './components/ModalTarefa';
@@ -47,28 +48,13 @@ function App() {
     }
   };
 
-  const tarefasExibidas = tarefas.filter((tarefa) => {
-    if (filtroDia && tarefa.dia !== filtroDia) {
-      return false;
-    }
+  const tarefasExibidas = exibirTarefas(
+    tarefas,
+    filtroDia,
+    filtroConcluido,
+    filtroPrioridade
+  );
 
-    if (filtroConcluido !== '') {
-      const eConcluido = filtroConcluido === 'true';
-
-      if (tarefa.concluido !== eConcluido) {
-        return false;
-      }
-    }
-
-    if (
-      filtroPrioridade !== '' &&
-      String(tarefa.prioridade) !== String(filtroPrioridade)
-    ) {
-      return false;
-    }
-
-    return true;
-  });
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 p-10 bg-gray-50 min-h-screen">
