@@ -1,4 +1,11 @@
-export function InputFormulario({ type, name, id,required = false,placeholder = "", ...props }) {
+export function InputFormulario({
+    type,
+    name,
+    id,
+    required = false,
+    placeholder = "",
+    ...props
+}) {
     return (
         <input
             type={type}

@@ -3,43 +3,57 @@ import { InputFormulario } from "./InputFormulario";
 import { LabelFormulario } from "./LabelFormulario";
 
 export function FormularioTarefas({ tarefas, setTarefas }) {
+    const adicionarTarefa = (e) => {
+        e.preventDefault();
+
+        const dadosFormulario = new FormData(e.currentTarget);
+
+        const titulo = dadosFormulario
+            .get("tarefa")
+            ?.toString()
+            .trim();
+
+        if (!titulo) return;
+
+        const novaTarefa = {
+            id: Date.now(),
+            titulo,
+            prioridade: dadosFormulario.get("prioridade") || "0",
+            descricao: dadosFormulario.get("descricao") || "",
+            dia: dadosFormulario.get("dia")?.toString().trim() || "",
+            dataLimite: null,
+            concluido: false,
+        };
+
+        const novasTarefas = [...tarefas, novaTarefa].sort(
+            (a, b) => Number(a.prioridade) - Number(b.prioridade)
+        );
+
+        salvarTarefas(novasTarefas, setTarefas);
+
+        e.currentTarget.reset();
+    };
+
     return (
         <form
             className="p-2 rounded flex flex-col gap-3"
-            onSubmit={(e) => {
-                e.preventDefault();
-                const dadosFormulario = new FormData(e.currentTarget);
-                const conteudoTexto = dadosFormulario.get('tarefa')?.toString().trim();
-
-                if (!conteudoTexto) return;
-
-                const novaTarefa = {
-                    id: Date.now(),
-                    titulo: conteudoTexto,
-                    prioridade: dadosFormulario.get('prioridade') || '0',
-                    descricao: dadosFormulario.get('descricao') || '',
-                    dia: dadosFormulario.get('dia')?.toString().trim() || '',
-                    dataLimite: null,
-                    concluido: false,
-                };
-
-                const novasTarefas = [...tarefas, novaTarefa].sort((a, b) => Number(a.prioridade) - Number(b.prioridade));
-                salvarTarefas(novasTarefas, setTarefas);
-                e.currentTarget.reset();
-            }}
+            onSubmit={adicionarTarefa}
         >
             <div>
                 <LabelFormulario htmlFor="tarefa" />
-                 <InputFormulario 
-                 type="text" 
-                 name="tarefa" 
-                 id="tarefa" 
-                 placeholder="Digite a sua tarefa"
-                 required={true}/>
+
+                <InputFormulario
+                    type="text"
+                    name="tarefa"
+                    id="tarefa"
+                    placeholder="Digite a sua tarefa"
+                    required={true}
+                />
             </div>
 
             <div>
                 <LabelFormulario htmlFor="descricao" />
+
                 <textarea
                     name="descricao"
                     id="descricao"
@@ -49,13 +63,32 @@ export function FormularioTarefas({ tarefas, setTarefas }) {
             </div>
 
             <div>
-                <LabelFormulario htmlFor="prioridade-tarefa" titulo="Prioridade"/>
-                <InputFormulario type="number" name="prioridade" id="prioridade-tarefa" placeholder="Digite a prioridade da tarefa" />
+                <LabelFormulario
+                    htmlFor="prioridade-tarefa"
+                    titulo="Prioridade"
+                />
+
+                <InputFormulario
+                    type="number"
+                    name="prioridade"
+                    id="prioridade-tarefa"
+                    placeholder="Digite a prioridade da tarefa"
+                    defaultValue="0"
+                />
             </div>
 
             <div>
-                <LabelFormulario htmlFor="dia" titulo="Dia da tarefa"/>
-                <InputFormulario type="date" name="dia" id="dia" required={true} />
+                <LabelFormulario
+                    htmlFor="dia"
+                    titulo="Dia da tarefa"
+                />
+
+                <InputFormulario
+                    type="date"
+                    name="dia"
+                    id="dia"
+                    required={true}
+                />
             </div>
 
             <button
