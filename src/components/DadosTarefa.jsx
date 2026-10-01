@@ -22,7 +22,7 @@ export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
                         titulo: titulo.trim(),
                         descricao,
                         prioridade,
-                        dia,
+                        dia
                     }
                     : item
             )

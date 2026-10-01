@@ -2,20 +2,21 @@ import { useState } from 'react';
 import { Trash2, Check, Undo, ExternalLink } from 'lucide-react';
 import { BotaoTarefas } from './components/BotaoTarefas';
 import { ClassificacaoTarefa } from './components/ClassificacaoTarefa';
-import { TarefasStatus } from './components/TarefasStatus';
 import {
-  procurarNumeroTarefas,
-  procurarNumeroTarefasAtrasadas,
   salvarTarefas,
-  removerTarefa
+  removerTarefa,
+  exibirTarefas
 } from '../assets/functions/tarefas';
 import { FormularioTarefas } from './components/FormularioTarefas';
-import { ModalTarefa } from './components/ModalTarefa';
+import { DivStatusTarefa } from './components/DivStatusTarefa';
 
 function App() {
   const [tarefas, setTarefas] = useState(() => {
     const tarefasSalvas = localStorage.getItem('tarefas');
-    return tarefasSalvas ? JSON.parse(tarefasSalvas) : [];
+
+    return tarefasSalvas
+      ? JSON.parse(tarefasSalvas)
+      : [];
   });
 
   const [filtroDia, setFiltroDia] = useState('');
@@ -26,7 +27,10 @@ function App() {
   const alternarConcluido = (id) => {
     const atualizadas = tarefas.map((tarefa) =>
       tarefa.id === id
-        ? { ...tarefa, concluido: !tarefa.concluido }
+        ? {
+          ...tarefa,
+          concluido: !tarefa.concluido
+        }
         : tarefa
     );
 
@@ -40,77 +44,30 @@ function App() {
   };
 
   const excluirTodas = () => {
-    if (confirm('Tem certeza que deseja apagar todas as tarefas?')) {
-      salvarTarefas([], setTarefas);
-      localStorage.removeItem('tarefas');
-      setTarefaSelecionada(null);
+    if (!confirm('Tem certeza que deseja apagar todas as tarefas?')) {
+      return;
     }
+
+    salvarTarefas([], setTarefas);
+    setTarefaSelecionada(null);
   };
 
-  const tarefasExibidas = tarefas.filter((tarefa) => {
-    if (filtroDia && tarefa.dia !== filtroDia) {
-      return false;
-    }
-
-    if (filtroConcluido !== '') {
-      const eConcluido = filtroConcluido === 'true';
-
-      if (tarefa.concluido !== eConcluido) {
-        return false;
-      }
-    }
-
-    if (
-      filtroPrioridade !== '' &&
-      String(tarefa.prioridade) !== String(filtroPrioridade)
-    ) {
-      return false;
-    }
-
-    return true;
-  });
+  const tarefasExibidas = exibirTarefas(
+    tarefas,
+    filtroDia,
+    filtroConcluido,
+    filtroPrioridade
+  );
 
   return (
     <div className="flex flex-col items-center justify-center gap-5 p-10 bg-gray-50 min-h-screen">
 
-      <div className="bg-white p-4 rounded shadow-md w-full max-w-md border border-gray-300">
-        <h2 className="text-lg font-bold mb-2 text-gray-800 text-center underline">
-          Adicionar Tarefa
-        </h2>
+      <FormularioTarefas
+        tarefas={tarefas}
+        setTarefas={setTarefas}
+      />
 
-        <FormularioTarefas
-          tarefas={tarefas}
-          setTarefas={setTarefas}
-        />
-      </div>
-
-      <div className="bg-white p-4 shadow-md rounded w-full max-w-md border border-gray-200 flex flex-row justify-between gap-2 text-center">
-
-        <TarefasStatus
-          className="text-black"
-          tipoTarefa="TOTAL"
-          numeroTotalTarefas={tarefas.length}
-        />
-
-        <TarefasStatus
-          className="text-yellow-500"
-          tipoTarefa="PENDENTES"
-          numeroTotalTarefas={procurarNumeroTarefas(tarefas, false)}
-        />
-
-        <TarefasStatus
-          className="text-green-500"
-          tipoTarefa="CONCLUÍDAS"
-          numeroTotalTarefas={procurarNumeroTarefas(tarefas, true)}
-        />
-
-        <TarefasStatus
-          className="text-red-500"
-          tipoTarefa="ATRASADAS"
-          numeroTotalTarefas={procurarNumeroTarefasAtrasadas(tarefas)}
-        />
-
-      </div>
+      <DivStatusTarefa tarefas={tarefas}/>
 
       <div className="bg-white p-4 rounded shadow-md w-full max-w-md border border-gray-200">
 
@@ -215,14 +172,16 @@ function App() {
 
                   <span
                     className={`font-medium text-md ${tarefa.concluido
-                      ? 'line-through text-gray-400'
-                      : 'text-gray-800'
+                        ? 'line-through text-gray-400'
+                        : 'text-gray-800'
                       }`}
                   >
                     {tarefa.titulo}
                   </span>
 
-                  <ClassificacaoTarefa tarefa={tarefa} />
+                  <ClassificacaoTarefa
+                    tarefa={tarefa}
+                  />
 
                   <span className="text-sm text-black font-bold">
                     Data: {tarefa.dia}
@@ -234,7 +193,9 @@ function App() {
 
                   <BotaoTarefas
                     className="bg-gray-300 hover:bg-gray-400 text-black"
-                    onClick={() => setTarefaSelecionada(tarefa)}
+                    onClick={() =>
+                      setTarefaSelecionada(tarefa)
+                    }
                   >
                     <ExternalLink size={16} />
                   </BotaoTarefas>
@@ -245,7 +206,9 @@ function App() {
                         ? 'bg-amber-500 hover:bg-amber-600 text-white'
                         : 'bg-green-500 hover:bg-green-600 text-white'
                     }
-                    onClick={() => alternarConcluido(tarefa.id)}
+                    onClick={() =>
+                      alternarConcluido(tarefa.id)
+                    }
                   >
                     {tarefa.concluido ? (
                       <Undo size={16} />
@@ -290,9 +253,10 @@ function App() {
           tarefas={tarefas}
           setTarefas={setTarefas}
           isOpen={true}
-          setIsClose={() => setTarefaSelecionada(null)}
+          setIsClose={() =>
+            setTarefaSelecionada(null)
+          }
         />
-
       )}
 
     </div>

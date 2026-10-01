@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 import { DadosTarefa } from './DadosTarefa';
+import { Modal } from './Modal';
 
 export function ModalTarefa({
     setIsClose,
@@ -11,24 +12,20 @@ export function ModalTarefa({
     if (!isOpen || !tarefa) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-            <div className="bg-white p-4 rounded-lg flex flex-col gap-3 w-full max-w-md shadow-lg">
+        <Modal>
+            <button
+                type="button"
+                onClick={setIsClose}
+                className="text-black flex self-end hover:text-red-500 cursor-pointer"
+            >
+                <X size={20} />
+            </button>
 
-                <button
-                    type="button"
-                    onClick={setIsClose}
-                    className="text-black flex self-end hover:text-red-500 cursor-pointer"
-                >
-                    <X size={20} />
-                </button>
-
-                <DadosTarefa
-                    tarefa={tarefa}
-                    tarefas={tarefas}
-                    setTarefas={setTarefas}
-                />
-
-            </div>
-        </div>
+            <DadosTarefa
+                tarefa={tarefa}
+                tarefas={tarefas}
+                setTarefas={setTarefas}
+            />
+        </Modal>
     );
 }
