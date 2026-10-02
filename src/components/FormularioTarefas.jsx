@@ -1,7 +1,9 @@
+
 import { salvarTarefas } from "../../assets/functions/tarefas";
 import { DivPrincipal } from "./DivPrincipal";
 import { InputFormulario } from "./InputFormulario";
 import { LabelFormulario } from "./LabelFormulario";
+import { SelectFormulario } from "./SelectFormulario";
 
 export function FormularioTarefas({
     tarefas,
@@ -15,7 +17,7 @@ export function FormularioTarefas({
 
         const titulo = formulario.tarefa.value.trim();
         const descricao = formulario.descricao.value.trim();
-        const prioridade = formulario.prioridade.value || "0";
+        const prioridade = formulario.prioridade.value;
         const dia = formulario.dia.value;
 
         if (!titulo || !dia) return;
@@ -30,8 +32,16 @@ export function FormularioTarefas({
             concluido: false,
         };
 
+        const ordemPrioridade = {
+            ALTA: 1,
+            MEDIA: 2,
+            BAIXA: 3
+        };
+
         const novasTarefas = [...tarefas, novaTarefa].sort(
-            (a, b) => Number(a.prioridade) - Number(b.prioridade)
+            (a, b) =>
+                ordemPrioridade[a.prioridade] -
+                ordemPrioridade[b.prioridade]
         );
 
         salvarTarefas(novasTarefas, setTarefas);
@@ -40,6 +50,7 @@ export function FormularioTarefas({
 
         setIsOpen(false);
     };
+
     return (
         <DivPrincipal>
             <h2 className="text-lg font-bold mb-2 text-gray-800 text-center underline">
@@ -86,14 +97,15 @@ export function FormularioTarefas({
                         titulo="Prioridade"
                     />
 
-                    <InputFormulario
-                        type="number"
+                    <SelectFormulario
                         name="prioridade"
                         id="prioridade"
-                        placeholder="Digite a prioridade"
-                        defaultValue="0"
-                        min="0"
-                    />
+                        defaultValue="MEDIA"
+                    >
+                        <option value="ALTA">Alta</option>
+                        <option value="MEDIA">Média</option>
+                        <option value="BAIXA">Baixa</option>
+                    </SelectFormulario>
                 </div>
 
                 <div>
@@ -120,3 +132,4 @@ export function FormularioTarefas({
         </DivPrincipal>
     );
 }
+

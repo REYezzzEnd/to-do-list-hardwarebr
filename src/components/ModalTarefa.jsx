@@ -4,12 +4,11 @@ import { Modal } from './Modal';
 
 export function ModalTarefa({
     setIsClose,
-    isOpen,
     tarefa,
     setTarefas,
     tarefas
 }) {
-    if (!isOpen || !tarefa) return null;
+    if (!tarefa) return null;
 
     return (
         <Modal>

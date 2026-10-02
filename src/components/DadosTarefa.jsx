@@ -2,17 +2,26 @@ import { useState } from "react";
 import { salvarTarefas } from "../../assets/functions/tarefas";
 import { InputFormulario } from "./InputFormulario";
 import { LabelFormulario } from "./LabelFormulario";
+import { SelectFormulario } from "./SelectFormulario";
 
 export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
     const [titulo, setTitulo] = useState(tarefa.titulo);
     const [descricao, setDescricao] = useState(tarefa.descricao || "");
-    const [prioridade, setPrioridade] = useState(tarefa.prioridade || "0");
+    const [prioridade, setPrioridade] = useState(
+        tarefa.prioridade || "MEDIA"
+    );
     const [dia, setDia] = useState(tarefa.dia || "");
 
     const salvarEdicao = (e) => {
         e.preventDefault();
 
         if (!titulo.trim()) return;
+
+        const ordemPrioridade = {
+            ALTA: 1,
+            MEDIA: 2,
+            BAIXA: 3
+        };
 
         const tarefasAtualizadas = tarefas
             .map((item) =>
@@ -28,7 +37,8 @@ export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
             )
             .sort(
                 (a, b) =>
-                    Number(a.prioridade) - Number(b.prioridade)
+                    ordemPrioridade[a.prioridade] -
+                    ordemPrioridade[b.prioridade]
             );
 
         salvarTarefas(tarefasAtualizadas, setTarefas);
@@ -37,9 +47,9 @@ export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
     return (
         <form
             onSubmit={salvarEdicao}
-            className="flex flex-col gap-3 text-left"
+            className="flex flex-col gap-4 text-left"
         >
-            <h2 className="text-lg font-bold text-center text-gray-800 underline">
+            <h2 className="text-xl font-bold text-center text-gray-800 underline">
                 EDITAR TAREFA
             </h2>
 
@@ -71,7 +81,8 @@ export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
                     value={descricao}
                     onChange={(e) => setDescricao(e.target.value)}
                     placeholder="Digite a descrição da tarefa"
-                    className="border border-gray-300 p-2 rounded w-full bg-white text-black focus:outline-blue-500"
+                    className="border border-gray-300 p-3 rounded-lg w-full bg-white text-black focus:outline-blue-500 resize-none"
+                    rows="3"
                 />
             </div>
 
@@ -81,13 +92,16 @@ export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
                     titulo="Prioridade"
                 />
 
-                <InputFormulario
-                    type="number"
+                <SelectFormulario
                     name="prioridade"
                     id="editar-prioridade"
                     value={prioridade}
                     onChange={(e) => setPrioridade(e.target.value)}
-                />
+                >
+                    <option value="ALTA">Alta</option>
+                    <option value="MEDIA">Média</option>
+                    <option value="BAIXA">Baixa</option>
+                </SelectFormulario>
             </div>
 
             <div>
@@ -108,7 +122,7 @@ export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
 
             <button
                 type="submit"
-                className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 cursor-pointer font-bold transition-colors"
+                className="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 cursor-pointer font-bold transition-colors"
             >
                 Salvar Alterações
             </button>
