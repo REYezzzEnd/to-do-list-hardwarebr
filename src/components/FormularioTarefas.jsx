@@ -3,7 +3,11 @@ import { DivPrincipal } from "./DivPrincipal";
 import { InputFormulario } from "./InputFormulario";
 import { LabelFormulario } from "./LabelFormulario";
 
-export function FormularioTarefas({ tarefas, setTarefas }) {
+export function FormularioTarefas({
+    tarefas,
+    setTarefas,
+    setIsOpen
+}) {
     const adicionarTarefa = (e) => {
         e.preventDefault();
 
@@ -33,8 +37,9 @@ export function FormularioTarefas({ tarefas, setTarefas }) {
         salvarTarefas(novasTarefas, setTarefas);
 
         formulario.reset();
-    };
 
+        setIsOpen(false);
+    };
     return (
         <DivPrincipal>
             <h2 className="text-lg font-bold mb-2 text-gray-800 text-center underline">

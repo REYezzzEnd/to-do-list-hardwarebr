@@ -7,8 +7,9 @@ import {
   removerTarefa,
   exibirTarefas
 } from '../assets/functions/tarefas';
-import { FormularioTarefas } from './components/FormularioTarefas';
 import { DivStatusTarefa } from './components/DivStatusTarefa';
+import { ModalTarefa } from './components/ModalTarefa';
+import { ModalFormulario } from './components/ModalFormulario';
 
 function App() {
   const [tarefas, setTarefas] = useState(() => {
@@ -23,6 +24,7 @@ function App() {
   const [filtroConcluido, setFiltroConcluido] = useState('');
   const [filtroPrioridade, setFiltroPrioridade] = useState('');
   const [tarefaSelecionada, setTarefaSelecionada] = useState(null);
+  const [isOpenForm, setIsOpenForm] = useState(false);
 
   const alternarConcluido = (id) => {
     const atualizadas = tarefas.map((tarefa) =>
@@ -62,12 +64,26 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-center gap-5 p-10 bg-gray-50 min-h-screen">
 
-      <FormularioTarefas
-        tarefas={tarefas}
-        setTarefas={setTarefas}
-      />
 
-      <DivStatusTarefa tarefas={tarefas}/>
+      <BotaoTarefas
+        onClick={() => setIsOpenForm(true)}
+        className="bg-blue-500 hover:bg-blue-600 text-white"
+      >
+        Clique Para Adicionar Alguma Tarefa
+      </BotaoTarefas>
+
+      {isOpenForm && (
+        <ModalFormulario
+          tarefas={tarefas}
+          setTarefas={setTarefas}
+          setIsOpen={setIsOpenForm}
+        />
+      )}
+
+
+
+
+      <DivStatusTarefa tarefas={tarefas} />
 
       <div className="bg-white p-4 rounded shadow-md w-full max-w-md border border-gray-200">
 
@@ -172,8 +188,8 @@ function App() {
 
                   <span
                     className={`font-medium text-md ${tarefa.concluido
-                        ? 'line-through text-gray-400'
-                        : 'text-gray-800'
+                      ? 'line-through text-gray-400'
+                      : 'text-gray-800'
                       }`}
                   >
                     {tarefa.titulo}
