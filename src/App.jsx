@@ -10,6 +10,7 @@ import {
 import { DivStatusTarefa } from './components/DivStatusTarefa';
 import { ModalTarefa } from './components/ModalTarefa';
 import { ModalFormulario } from './components/ModalFormulario';
+import { ModalConfirmacao } from './components/ModalConfirmacao';
 import { SelectFormulario } from './components/SelectFormulario';
 import { LabelFormulario } from './components/LabelFormulario';
 
@@ -27,6 +28,7 @@ function App() {
   const [filtroPrioridade, setFiltroPrioridade] = useState('');
   const [tarefaSelecionada, setTarefaSelecionada] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
+  const [exclusao, setExclusao] = useState(null);
 
   const alternarConcluido = (id) => {
     const atualizadas = tarefas.map((tarefa) =>
@@ -48,12 +50,27 @@ function App() {
   };
 
   const excluirTodas = () => {
-    if (!confirm('Tem certeza que deseja apagar todas as tarefas?')) {
-      return;
-    }
+    setExclusao('todas');
+  };
 
+  const confirmarExclusaoTodas = () => {
     salvarTarefas([], setTarefas);
     setTarefaSelecionada(null);
+    setExclusao(null);
+  };
+
+  const confirmarExclusaoTarefa = () => {
+    removerTarefa(
+      exclusao.id,
+      tarefas,
+      setTarefas
+    );
+
+    if (tarefaSelecionada?.id === exclusao.id) {
+      setTarefaSelecionada(null);
+    }
+
+    setExclusao(null);
   };
 
   const tarefasExibidas = exibirTarefas(
@@ -235,11 +252,7 @@ function App() {
                   <BotaoTarefas
                     className="bg-red-500 text-white hover:bg-red-800"
                     onClick={() =>
-                      removerTarefa(
-                        tarefa.id,
-                        tarefas,
-                        setTarefas
-                      )
+                      setExclusao(tarefa)
                     }
                   >
                     <Trash2 size={18} />
@@ -270,6 +283,27 @@ function App() {
           setIsClose={() =>
             setTarefaSelecionada(null)
           }
+        />
+      )}
+
+      {exclusao && (
+        <ModalConfirmacao
+          titulo={
+            exclusao === 'todas'
+              ? 'Excluir todas as tarefas?'
+              : 'Excluir tarefa?'
+          }
+          mensagem={
+            exclusao === 'todas'
+              ? 'Todas as tarefas serão excluídas permanentemente.'
+              : `A tarefa "${exclusao.titulo}" será excluída permanentemente.`
+          }
+          onConfirmar={
+            exclusao === 'todas'
+              ? confirmarExclusaoTodas
+              : confirmarExclusaoTarefa
+          }
+          onCancelar={() => setExclusao(null)}
         />
       )}
 
