@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { toast } from "sonner";
 import { salvarTarefas } from "../../assets/functions/tarefas";
 import { InputFormulario } from "./InputFormulario";
 import { LabelFormulario } from "./LabelFormulario";
@@ -15,7 +16,10 @@ export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
     const salvarEdicao = (e) => {
         e.preventDefault();
 
-        if (!titulo.trim()) return;
+        if (!titulo.trim()) {
+            toast.error("O título da tarefa é obrigatório.");
+            return;
+        }
 
         const ordemPrioridade = {
             ALTA: 1,
@@ -42,6 +46,10 @@ export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
             );
 
         salvarTarefas(tarefasAtualizadas, setTarefas);
+
+        toast.success("Tarefa atualizada com sucesso!", {
+            description: `"${titulo.trim()}" foi atualizada.`
+        });
     };
 
     return (
@@ -66,6 +74,7 @@ export function DadosTarefa({ tarefa, tarefas, setTarefas }) {
                     value={titulo}
                     onChange={(e) => setTitulo(e.target.value)}
                     required={true}
+                    maxLength={8}
                 />
             </div>
 

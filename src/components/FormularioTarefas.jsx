@@ -1,4 +1,4 @@
-
+import { toast } from 'sonner';
 import { salvarTarefas } from "../../assets/functions/tarefas";
 import { DivPrincipal } from "./DivPrincipal";
 import { InputFormulario } from "./InputFormulario";
@@ -20,7 +20,15 @@ export function FormularioTarefas({
         const prioridade = formulario.prioridade.value;
         const dia = formulario.dia.value;
 
-        if (!titulo || !dia) return;
+        if (!titulo) {
+            toast.error('O título da tarefa é obrigatório.');
+            return;
+        }
+
+        if (!dia) {
+            toast.error('Selecione uma data para a tarefa.');
+            return;
+        }
 
         const novaTarefa = {
             id: Date.now(),
@@ -46,8 +54,11 @@ export function FormularioTarefas({
 
         salvarTarefas(novasTarefas, setTarefas);
 
-        formulario.reset();
+        toast.success('Tarefa adicionada!', {
+            description: `"${titulo}" foi adicionada à sua lista.`
+        });
 
+        formulario.reset();
         setIsOpen(false);
     };
 
@@ -72,6 +83,7 @@ export function FormularioTarefas({
                         name="tarefa"
                         id="tarefa"
                         placeholder="Digite a sua tarefa"
+                        maxLength={8}
                         required
                     />
                 </div>
@@ -132,4 +144,3 @@ export function FormularioTarefas({
         </DivPrincipal>
     );
 }
-
